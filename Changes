@@ -1,0 +1,6 @@
+Revision history for Perl extension App::Relate.
+
+0.01  Tue Jun 19 21:38:08 2007
+	- original version; created by h2xs 1.23 with options
+		-AX -n App::Relate -b 5.8.0
+
