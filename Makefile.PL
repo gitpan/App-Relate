@@ -11,6 +11,7 @@ WriteMakefile(
                           Module::List::Pluggable => 0,
                           File::Locate::Harder    => 0,
                           Test::Trap           => 0,
+                          Test::File::Contents => 0,
                           Carp                 => 0,
                           Data::Dumper         => 0,
                           Env                  => 0,

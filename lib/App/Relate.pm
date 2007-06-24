@@ -3,43 +3,45 @@ use base qw( Class::Base );
 
 =head1 NAME
 
-App::Relate - "relate" script backend
+App::Relate - backend for "relate" script (filtered locate)
 
 =head1 SYNOPSIS
 
-   use App::Relate;
+    use App::Relate;
 
-   # search the standard locate database
-   my $rh = App::Relate->new();
-   my $matches = $rh->relate( \@search_terms );
+    # search the standard locate database
+    my $rh = App::Relate->new();
+    my $matches = $rh->relate( \@search_terms );
 
-   # screen the results with a named filter
-   my $matches = $rh->relate( \@terms, { add_filters => [':omit'] });
 
-   # using options (1) a non-standard locate db, (2) alternate filter
-   # storage locations, (3) case-insensitive matches
+    # screen the results with a named filter
+    my $matches = $rh->relate( \@terms, { add_filters => [':omit'] });
 
+
+    # using options (1) a non-standard locate db, (2) alternate filter storage,
+    # (3) case-insensitive matches
+
+    # generating a newly created locate database
     use File::Locate::Harder;
-    my  = "/tmp/special_locate.db";
+    my $db_file = "/tmp/special_locate.db";
     my $flh = File::Locate::Harder->new( db => undef );
-    $flh->create_database( $dir_to_be_indexed,  )
+    $flh->create_database( $dir_to_be_indexed, $db_file );
 
     # filter storage search path consisting of:
     #   (1) yaml file (2) a DBI database connection
-    my $alt_storage = { storage=> [
-             $yaml_file,
-             { format     => 'DBI',
-               connect_to => $connect_to,
-               owner      => $owner,
-               password   => $password,
-             },
-          ];
+    my $alt_storage_aref = [
+               $yaml_file,
+               { format     => 'DBI',
+                 connect_to => $connect_to,
+                 owner      => $owner,
+                 password   => $password,
+               },
+            ];
 
     my $rh = App::Relate->new( {
-               storage            => [ $alt_storage ],
-               transform_storage  => [ $alt_tran_storage ],
-               locatedb          => $db,
-               modifiers          => 'i',  # all matches case insensitive
+               storage            => $alt_storage_aref,
+               locatedb           => $db_file,
+               modifiers          => 'i',  # force case-insensitive matches
             } );
     my $matches = $rh->relate( \@terms );
 
@@ -51,9 +53,9 @@ App::Relate - "relate" script backend
                 save_filters_when_used => 1,
               } );
     my $result = $lfar->relate( \@search_terms ); # by default uses ':skipdull'
-    # A copy of the ":skipdull" filter should now be found in
-    # $yaml_file, where it can be edited: it will take precedence
-    # over the default definition on later runs.
+        # A copy of the ":skipdull" filter should now be found in
+        # $yaml_file, where it can be edited: it will take precedence
+        # over the default definition on later runs.
 
 
 =head1 DESCRIPTION
@@ -94,7 +96,7 @@ use List::Filter::Storage;
 use List::Filter::Transform;
 use List::Filter::Internal;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =item new
 
@@ -124,13 +126,13 @@ standard filters.
 Like "storage", except for L<List::Filter::Transform> "transforms".
 Used internally to access one standard filter (the "dwim" transform
 of "^" into a boundary match).  Unlike the case with filter storage,
-a copy of this transform is not saved.
+copies of standard transforms are not saved to the write_storage.
 
 =item locatedb
 
 The "locate" database file used for primary searches. Optional,
-defaults to the system's main locate database.  Primarily for
-testing purposes.
+defaults to the system's main locate database.  Setting this is
+typically done only for testing purposes.
 
 =item modifiers
 
@@ -175,10 +177,6 @@ sub init {
   my $transform_storage  = $args->{ transform_storage } || [];
 
   my $default_stash = "$HOME/.list-filter/filters.yaml";
-
-#   unless ($args->{ storage }) { # if it looks like we're going to use the default stash
-#     mkpath( dirname( $default_stash ) ) or croak "XXX Could not create location for $default_stash: $!";
-#   }
 
   my $lfi = List::Filter::Internal->new( { default_stash => $default_stash } );
   my $storage = $lfi->qualify_storage( $args->{ storage } );
@@ -647,39 +645,6 @@ sub set_search_filter_name {
   $self->{ search_filter_name } = $search_filter_name;
   return $search_filter_name;
 }
-
-
-
-=back
-
-=head2 proceedural routines
-
-=over
-
-=item merge_hash
-
-This routine does hash addition, merging the key-value pairs of
-one hash into another.
-
-It takes two hash references, and adds the values of the second
-into the first.
-
-Inputs: (1) the summation href, (2) the href to be added into the first.
-
-Return: a copy of the summation href.
-
-=cut
-
-sub merge_hash {
-  my $big_hash = shift;
-  my $add_hash = shift;
-
-  my @keys = (keys %{ $add_hash });
-  @{ $big_hash }{ @keys }  = @{ $add_hash }{ @keys };  # hash slice
-
-  return $big_hash;
-}
-
 
 1;
 

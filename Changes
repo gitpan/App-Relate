@@ -4,3 +4,6 @@ Revision history for Perl extension App::Relate.
 	- original version; created by h2xs 1.23 with options
 		-AX -n App::Relate -b 5.8.0
 
+0.02  Saturday June 23, 2007   6:44 PM
+        - fixed PREREQ_PM dependency on Test::File::Contents
+          and revised SYNOPSIS in pod
