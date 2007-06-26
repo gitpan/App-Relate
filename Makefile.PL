@@ -3,19 +3,18 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     NAME              => 'App::Relate',
     VERSION_FROM      => 'lib/App/Relate.pm', # finds $VERSION
+    EXE_FILES           => [ 'relate' ],
     PREREQ_PM         => {
                           List::Filter            => 0,
                           List::Filter::Storage   => 0,
                           List::Filter::Transform => 0,
                           List::Filter::Internal  => 0,
-                          Module::List::Pluggable => 0,
                           File::Locate::Harder    => 0,
                           Test::Trap           => 0,
                           Test::File::Contents => 0,
                           Carp                 => 0,
                           Data::Dumper         => 0,
                           Env                  => 0,
-                          File::Basename       => 0,
                           File::Copy           => 0,
                           File::Path           => 0,
                           FindBin              => 0,

@@ -5,12 +5,16 @@ use warnings;
 use strict;
 $|=1;
 my $DEBUG = 0;
-use Data::Dumper;
 
 use Test::More;
 my $total_count;
-BEGIN { $total_count = 34;
-        plan tests => $total_count };
+BEGIN {
+  $total_count = 34;
+  plan tests => $total_count;
+  if ($DEBUG) {
+    require Data::Dumper;
+  }
+};
 
 use Test::Trap qw( trap $trap );
 
@@ -81,7 +85,7 @@ SKIP:
       skip $why, $how_many;
     }
 
-    {                           #4
+    { #4
       my $test_name = "Testing relate method using default filter";
       my $lfr = App::Relate->new( {
                                                  storage     => $stash,
@@ -239,10 +243,10 @@ SKIP:
         is_deeply( [ sort( @terms ) ], [ sort( @terms_original ) ],
                    "Testing that the relate method does not modify search terms array");
 
-        ($DEBUG) && print STDERR "matches_a: ", Dumper($matches_a), "\n";
-        ($DEBUG) && print STDERR "matches_b: ", Dumper($matches_b), "\n";
-        ($DEBUG) && print STDERR "matches_c: ", Dumper($matches_c), "\n";
-        ($DEBUG) && print STDERR "matches_d: ", Dumper($matches_d), "\n";
+        ($DEBUG) && print STDERR "matches_a: ", Data::Dumper::Dumper($matches_a), "\n";
+        ($DEBUG) && print STDERR "matches_b: ", Data::Dumper::Dumper($matches_b), "\n";
+        ($DEBUG) && print STDERR "matches_c: ", Data::Dumper::Dumper($matches_c), "\n";
+        ($DEBUG) && print STDERR "matches_d: ", Data::Dumper::Dumper($matches_d), "\n";
 
         my @expected_a = sort( (
                                 "$loc/essays/scared_of_their_shadow.txt",
@@ -492,10 +496,10 @@ SKIP:
         is_deeply( [ sort( @terms ) ], [ sort( @terms_original ) ],
                    "Testing that the relate method does not modify search terms array");
 
-        ($DEBUG) && print STDERR "matches_a: ", Dumper($matches_a), "\n";
-        ($DEBUG) && print STDERR "matches_b: ", Dumper($matches_b), "\n";
-        ($DEBUG) && print STDERR "matches_c: ", Dumper($matches_c), "\n";
-        ($DEBUG) && print STDERR "matches_d: ", Dumper($matches_d), "\n";
+        ($DEBUG) && print STDERR "matches_a: ", Data::Dumper::Dumper($matches_a), "\n";
+        ($DEBUG) && print STDERR "matches_b: ", Data::Dumper::Dumper($matches_b), "\n";
+        ($DEBUG) && print STDERR "matches_c: ", Data::Dumper::Dumper($matches_c), "\n";
+        ($DEBUG) && print STDERR "matches_d: ", Data::Dumper::Dumper($matches_d), "\n";
 
         my @expected_a = sort( (
                                 "$tree/AAA111/pixies/the_second.jpg",
@@ -591,10 +595,10 @@ SKIP:
         is_deeply( [ sort( @search) ], [ sort( @search_original ) ],
                    "Testing that the relate method does not modify search terms array");
 
-        ($DEBUG) && print STDERR "matches_a: ", Dumper($matches_a), "\n";
-        ($DEBUG) && print STDERR "matches_b: ", Dumper($matches_b), "\n";
-        ($DEBUG) && print STDERR "matches_c: ", Dumper($matches_c), "\n";
-        ($DEBUG) && print STDERR "matches_d: ", Dumper($matches_d), "\n";
+        ($DEBUG) && print STDERR "matches_a: ", Data::Dumper::Dumper($matches_a), "\n";
+        ($DEBUG) && print STDERR "matches_b: ", Data::Dumper::Dumper($matches_b), "\n";
+        ($DEBUG) && print STDERR "matches_c: ", Data::Dumper::Dumper($matches_c), "\n";
+        ($DEBUG) && print STDERR "matches_d: ", Data::Dumper::Dumper($matches_d), "\n";
 
         my @expected_a = sort( (
                                 "$tree/BBB222/pyx/the_first.jpg",
@@ -689,16 +693,16 @@ SKIP:
         my $matches_c = $lfr->relate( \@search, $opt_c );
         my $matches_d = $lfr->relate( \@search, $opt_d );
 
-        ($DEBUG) && print STDERR "search: " . Dumper( \@search ), "\n";
-        ($DEBUG) && print STDERR "orig:   " . Dumper( \@search_original ), "\n";
+        ($DEBUG) && print STDERR "search: " . Data::Dumper::Dumper( \@search ), "\n";
+        ($DEBUG) && print STDERR "orig:   " . Data::Dumper::Dumper( \@search_original ), "\n";
 
         is_deeply( [ sort( @search) ], [ sort( @search_original ) ],
                    "Testing that the relate method does not modify search terms array");
 
-        ($DEBUG) && print STDERR "matches_a: ", Dumper($matches_a), "\n";
-        ($DEBUG) && print STDERR "matches_b: ", Dumper($matches_b), "\n";
-        ($DEBUG) && print STDERR "matches_c: ", Dumper($matches_c), "\n";
-        ($DEBUG) && print STDERR "matches_d: ", Dumper($matches_d), "\n";
+        ($DEBUG) && print STDERR "matches_a: ", Data::Dumper::Dumper($matches_a), "\n";
+        ($DEBUG) && print STDERR "matches_b: ", Data::Dumper::Dumper($matches_b), "\n";
+        ($DEBUG) && print STDERR "matches_c: ", Data::Dumper::Dumper($matches_c), "\n";
+        ($DEBUG) && print STDERR "matches_d: ", Data::Dumper::Dumper($matches_d), "\n";
 
         my @expected_a = sort( (
                                 "$tree/CCC333/sam_the_fifth.funny_ext",

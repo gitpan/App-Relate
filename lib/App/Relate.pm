@@ -79,16 +79,16 @@ in order to be relatively portable.
 use 5.8.0;
 use strict;
 use warnings;
-my $DEBUG = 0;
 use Carp;
-use Data::Dumper;
-
-use File::Path qw(mkpath);
-use File::Basename qw(dirname);
+use Hash::Util qw( lock_keys unlock_keys );
 use Env qw(HOME);
 
-use Hash::Util qw( lock_keys unlock_keys );
-use Module::List::Pluggable qw( list_modules_under import_modules );
+my $DEBUG = 0;
+BEGIN {
+  if ($DEBUG) {
+    require Data::Dumper;
+  }
+};
 
 use File::Locate::Harder;
 use List::Filter;
@@ -96,7 +96,7 @@ use List::Filter::Storage;
 use List::Filter::Transform;
 use List::Filter::Internal;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 =item new
 
@@ -438,7 +438,7 @@ sub list_filters {
 
   my $modifiers       = $self->modifiers;
 
-  my $filter_storage            = $self->filter_storage;
+  my $filter_storage  = $self->filter_storage;
   my $filters         = $filter_storage->list_filters;
 
   my $search_filter_name = $self->search_filter_name;

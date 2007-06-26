@@ -4,21 +4,24 @@
 use warnings;
 use strict;
 $|=1;
-use Data::Dumper;
+
 my $DEBUG = 0;
 
 use Test::More;
 my $total_count;
-BEGIN { $total_count = 9;
-        plan tests => $total_count };
+BEGIN {
+  $total_count = 9;
+  plan tests => $total_count;
+  if ($DEBUG) {
+    require Data::Dumper;
+  }
+};
 
 use Test::Trap qw( trap $trap );
 use Test::File::Contents qw( file_contents_identical file_contents_is );
 
 use File::Path qw(mkpath);
-use File::Basename;
 use File::Copy qw(copy move);
-use Data::Dumper;
 
 use FindBin qw($Bin);
 use File::Locate::Harder;
@@ -213,7 +216,7 @@ SKIP:
 
           my $matches = $lfr->relate( \@terms, $method_opts );
 
-          ($DEBUG) && print STDERR "matches: ". Dumper($matches) . "\n";
+          ($DEBUG) && print STDERR "matches: ". Data::Dumper::Dumper($matches) . "\n";
 
           my $expected_matches_sorted = [ sort( @{ $expected_matches } ) ];
           my $matches_sorted =          [ sort( @{ $matches } ) ];

@@ -1,14 +1,13 @@
 # http://module-build.sourceforge.net/META-spec.html
 #XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
 name:         App-Relate
-version:      0.02
+version:      0.03
 version_from: lib/App/Relate.pm
 installdirs:  site
 requires:
     Carp:                          0
     Data::Dumper:                  0
     Env:                           0
-    File::Basename:                0
     File::Copy:                    0
     File::Locate::Harder:          0
     File::Path:                    0
@@ -18,7 +17,6 @@ requires:
     List::Filter::Internal:        0
     List::Filter::Storage:         0
     List::Filter::Transform:       0
-    Module::List::Pluggable:       0
     strict:                        0
     Test::File::Contents:          0
     Test::More:                    0

@@ -1,27 +1,24 @@
-# Test file created outside of h2xs framework.
-# Run this like so: `perl relate.t'
+# Test file. Run this like: "perl relate.t"
 #   doom@kzsu.stanford.edu     2004/05/28 06:29:19
-
-#########################
 
 use warnings;
 use strict;
 $|=1;
-use File::Basename;
-use Data::Dumper;
 
 use FindBin qw($Bin);
-
-use File::Locate::Harder;
-
 use Test::More;
 my $total_count;
-BEGIN { $total_count = 8;
-        plan tests => $total_count };
+my $DEBUG = 0;
+BEGIN {
+  $total_count = 8;
+  plan tests => $total_count;
+  if ($DEBUG) {
+    require Data::Dumper;
+  }
+};
 
 use Test::Trap qw( trap $trap );
-
-my $DEBUG = 0;
+use File::Locate::Harder;
 
 # program to test
 
@@ -48,15 +45,14 @@ SKIP:
     unless ( $err_mess =~ qr{ $expected_err_mess }x) {
       die "$err_mess";
     }
-    my $how_many = $total_count - 2; # all remaining tests
+    my $how_many = $total_count - 1; # all remaining tests
     skip "Problem with installation of 'locate'", $how_many;
   }
 
   my (@lines, $cmd, @expected);
 
-
  SKIP:
-  {                             #2,#3
+  { #2,#3
     # Using a baby slocate database for testing: t/dat/db/dummies.db
     # Indexing the files located here:           t/dat/dummies
 
@@ -105,7 +101,7 @@ SKIP:
     }                           # end skip - term matches path
 
   SKIP:
-    {                           #3
+    { #3
       @lines = ();
       my @terms = qw( Else -foah -tew -thu );
       my $search_string = join ' ', @terms;
@@ -128,11 +124,11 @@ SKIP:
                   );
       @expected = sort @expected;
       is_deeply( \@lines, \@expected, "relate with subtraction");
-    }                           # end skip - term matches path
-  }                        # end skip - couldn't create locate db
+    } # end skip - term matches path
+  } # end skip - couldn't create locate db
 
  SKIP:
-  {                             #4, 5
+  { #4, 5
     my $db_loc = "$Bin/dat/db";
     my $tree = "$Bin/dat/dorks";
     my $db = "$db_loc/dorks.db";
@@ -156,7 +152,7 @@ SKIP:
     my (@result, $cmd, @expected);
 
   SKIP:
-    {                           #4
+    { #4
       @result = ();
       my @terms = qw( Politicians bio );
       my $search_string = join ' ', @terms;
@@ -179,10 +175,10 @@ SKIP:
                   );
       @expected = sort @expected;
       is_deeply( \@result, \@expected, "relate basic two term search");
-    }                           # end skip - term matches path
+    } # end skip - term matches path
 
   SKIP:
-    {                           #5
+    { #5
       @result = ();
       my @terms = qw( check Politicians pl );
       my $search_string = join ' ', @terms;
@@ -204,11 +200,11 @@ SKIP:
                   );
       @expected = sort @expected;
       is_deeply( \@result, \@expected, "relate basic three term search");
-    }                           # end skip - term matches path
-  }                        # end skip - couldn't create locate db
+    } # end skip - term matches path
+  } # end skip - couldn't create locate db
 
  SKIP:
-  {                             #6, #7, #8
+  { #6, #7, #8
     my $db_loc = "$Bin/dat/db";
     my $tree = "$Bin/dat/oink";
     my $db = "$db_loc/oink.db";
@@ -225,14 +221,14 @@ SKIP:
       $why = "Can't get File::Locate::Harder to work with $db";
     }
     if ($why) {
-      my $how_many = 2;
+      my $how_many = 3;
       skip $why, $how_many;
     }
 
     my (@result, $cmd, @expected);
 
   SKIP:
-    {                           #6
+    { #6
       @result = ();
       my @terms = qw( fragmented -txt );
       my $search_string = join ' ', @terms;
@@ -255,10 +251,10 @@ SKIP:
                   );
       @expected = sort @expected;
       is_deeply( \@result, \@expected, "relate: one term positive, one negative");
-    }                           # end skip - term matches path
+    } # end skip - term matches path
 
   SKIP:
-    {                           #7
+    { #7
       @result = ();
       my @terms = qw( son tree );
       my $search_string = join ' ', @terms;
@@ -298,12 +294,12 @@ SKIP:
                    "$tree/tree_son/zzz/ZZZ/splintered_reason.txt",
                   );
       @expected = sort @expected;
-      ($DEBUG) && print STDERR "result: ". Dumper( \@result ) , "\n";
+      ($DEBUG) && print STDERR "result: ". Data::Dumper::Dumper( \@result ) , "\n";
       is_deeply( \@result, \@expected, "relate basic :skipdull");
-    }                           # end skip - term matches path
+    } # end skip - term matches path
 
   SKIP:
-    {                           #8
+    { #8
       @result = ();
       my @terms = qw( son tree );
       my $search_string = join ' ', @terms;
@@ -345,7 +341,7 @@ SKIP:
                    "$tree/tree_son/zzz/ZZZ/splintered_reason.txt~",
                   );
       @expected = sort @expected;
-      ($DEBUG) && print STDERR "result: ". Dumper( \@result ) , "\n";
+      ($DEBUG) && print STDERR "result: ". Data::Dumper::Dumper( \@result ) , "\n";
       is_deeply( \@result, \@expected, "relate shut off default filter");
     } # end skip - term matches path
   } # end skip - couldn't create locate db
