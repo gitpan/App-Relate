@@ -1,27 +1,32 @@
-# http://module-build.sourceforge.net/META-spec.html
-#XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
-name:         App-Relate
-version:      0.03
-version_from: lib/App/Relate.pm
-installdirs:  site
+---
+name: App-Relate
+version: 0.04
+author:
+  - 'Joseph Brenner <doom@kzsu.stanford.edu>'
+abstract: simple form of the "relate" script (wrapper around locate)
+license: perl
+resources:
+  license: http://dev.perl.org/licenses/
+build_requires:
+  Data::Dumper: 0
+  FindBin: 0
+  Test::More: 0
+  lib: 0
+  strict: 0
+  warnings: 0
 requires:
-    Carp:                          0
-    Data::Dumper:                  0
-    Env:                           0
-    File::Copy:                    0
-    File::Locate::Harder:          0
-    File::Path:                    0
-    FindBin:                       0
-    Hash::Util:                    0
-    List::Filter:                  0
-    List::Filter::Internal:        0
-    List::Filter::Storage:         0
-    List::Filter::Transform:       0
-    strict:                        0
-    Test::File::Contents:          0
-    Test::More:                    0
-    Test::Trap:                    0
-    warnings:                      0
-
-distribution_type: module
-generated_by: ExtUtils::MakeMaker version 6.17
+  Carp: 0
+  Data::Dumper: 0
+  Exporter: 0
+  strict: 0
+  warnings: 0
+configure_requires:
+  Module::Build: 0.35
+provides:
+  App::Relate:
+    file: lib/App/Relate.pm
+    version: 0.04
+generated_by: Module::Build version 0.35
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
