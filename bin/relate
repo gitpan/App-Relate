@@ -59,7 +59,7 @@ use Cwd            qw( cwd abs_path );
 
 use Env qw(HOME);
 
-our $VERSION = 0.01;
+our $VERSION = 0.10;
 my  $prog    = basename($0);
 
 use Getopt::Long qw(:config no_ignore_case bundling require_order );
@@ -101,6 +101,7 @@ my $opts = {
             links_only  => $links_only,
             database    => $database,
             locate      => $locate,
+            DEBUG       => $DEBUG,
            };
 
 my @search_terms = @ARGV;
@@ -300,12 +301,9 @@ been re-named L<App::Relate::Complex> and L<relate_complex>.
 
 =head3 speed
 
-By informal benchmarking (counting seconds in my head), I would say
-this script is about twice as fast as the old List::Filter based version
-of relate (running on my AMD64 linux box).
-
-(I was hoping for a little more speed than that, actually, but 3 secs
-vs. 6 secs is good.)
+Some simple benchmarking shows that this script is about twice as
+fast as the old List::Filter based version of relate (running on
+my AMD64 linux box).
 
 =head1 TROUBLESHOOTING
 
@@ -326,6 +324,17 @@ have a "locate" program installed on your system, but it could be it's
 just not located in your PATH, or it may even be named differently.  You
 can experiment with different names and/or explicit paths using the
 "--locate" option.
+
+=head2 Can't locate object method "new"
+
+An error message like this:
+
+  Can't locate object method "new" via package "App::Relate" at /usr/bin/relate line 83.
+
+May very well mean that you've managed to run the old version of the "relate"
+script (from a pre-0.04 cpan package) with the new version of App::Relate
+(from version 0.04 or later).  Try to clean-up any old versions, and re-install
+the App::Relate package.
 
 =head1 SEE ALSO
 

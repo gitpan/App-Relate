@@ -1,6 +1,6 @@
 ---
 name: App-Relate
-version: 0.04
+version: 0.10
 author:
   - 'Joseph Brenner <doom@kzsu.stanford.edu>'
 abstract: simple form of the "relate" script (wrapper around locate)
@@ -25,7 +25,7 @@ configure_requires:
 provides:
   App::Relate:
     file: lib/App/Relate.pm
-    version: 0.04
+    version: 0.10
 generated_by: Module::Build version 0.35
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html

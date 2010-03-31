@@ -41,7 +41,7 @@ None by default.  The following, on request (or via ':all' tag):
 use 5.008;
 use strict;
 use warnings;
-my $DEBUG = 1;
+my $DEBUG = 0;
 use Carp;
 use Data::Dumper;
 
@@ -55,15 +55,39 @@ our %EXPORT_TAGS = ( 'all' => [
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 our @EXPORT = qw(  ); # items to export into callers namespace by default.
                       # (don't use this without a very good reason.)
-our $VERSION = '0.04';
+our $VERSION = '0.10';
 
 =item relate
+
+The relate routine searches the filesystem for items whose
+fullpath matches all of the terms specified the search terms aref
+(first argument), and filters out any that match a term in the
+filters aref (second argument).  It's behavior can be modified
+by options supplied in the options hashref (the third argument).
+
+The options hashref may have values:
+
+  ignore_case   do case insensitive searches
+
+  dirs_only     return only matching directories
+  files_only    return only matching plain files
+  links_only    return only matching symlinks
+
+  all_results   ignore any filter supplied as a second argument.
+                A convenience to script usage: idential to using an undef second arg.
+
+  test_data      For test purposes: an aref of strings to be searched and filtered.
+                 Suppresses use of L<locate>.
+
+  locate         Alternate 'locate' invocation string. See L<locate> routine.
+  locatedb       Specify non-standard locate db file.  See L<locate> routine.
 
 Example usage:
 
    my $results = relate( \@search_terms, \@filter_terms, $opts );
 
-A more detailed example, searching a test data set:
+
+Example usage (searching a test data set):
 
    my $skipdull = ['~$', '\bRCS\b', '\bCVS\b', '^#', '\.elc$' ];
    my $results =
@@ -75,12 +99,6 @@ A more detailed example, searching a test data set:
                      ],
           } );
 
-If a "test_data" aref option has been supplied, it will
-search that listing rather than doing a locate command
-(this is for testing purposes).
-
-Note that the options hash is passed through to the L<locate> routine,
-so this routine also supports the "locate" and "database" options.
 
 =cut
 
@@ -88,10 +106,11 @@ sub relate {
   my $searches = shift;
   my $filters  = shift;
   my $opts     = shift;
+  my $DEBUG    = $opts->{ DEBUG };
 
   my $all_results = $opts->{ all_results };
   my $ignore_case = $opts->{ ignore_case };
-  my $test_data    = $opts->{ test_data };
+  my $test_data   = $opts->{ test_data };
   my $dirs_only   = $opts->{ dirs_only };
   my $files_only  = $opts->{ files_only };
   my $links_only  = $opts->{ links_only };
@@ -108,6 +127,7 @@ sub relate {
 
   # dwim upcarets: usually should behave like boundary matches
   my @rules = map{ s{^ \^ (?![/]) }{\\b}xg; $_ } @{ $searches };
+  # TODO why not qr{ $_ }, compile regexps at this stage?  Bench this...
 
   my @set = @{ $initial };
   my @temp;
@@ -174,21 +194,28 @@ sub relate {
 Runs the locate command on the given search term, the "seed".
 Also accepts a hashref of options as a second argument.
 
-Define the locate option to something besides 'locate' to run
-a different program (note: you may include the path here).
+Makes use of options fields "DEBUG", "locate", and "locatedb"
+(aka "database").
+
+The "locate" option defaults simply to "locate".  Define it as
+something else if you want to use a different program internally.
+(note: you may include the path).
 
 Example:
 
    my $hits = locate( $seed, { locate => '/usr/local/bin/slocate' } );
+
+   my $hits = locate( $seed, { locatedb => '/tmp/slocate.db' } );
 
 =cut
 
 sub locate {
   my $seed     = shift;
   my $opts     = shift;
+  my $DEBUG    = $opts->{ DEBUG };
 
-  my $locate = $opts->{ locate } || 'locate';
-  my $database = $opts->{ database };
+  my $locate   = $opts->{ locate } || 'locate';
+  my $database = $opts->{ database } || $opts->{ locatedb };
 
   my $option_string = '';
   if ( $opts->{ regexp } ) {

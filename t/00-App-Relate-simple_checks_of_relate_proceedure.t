@@ -1,6 +1,9 @@
 # A perl test file, which can be run like so:
-#   `perl 01-App-Relate.t'
+#   `perl 00-App-Relate-simple_checks_of_relate_proceedure.t'
 #         doom@kzsu.stanford.edu     2010/03/15 20:27:48
+
+# Tests App::Relate directly, doesn't try to use the 'relate' script.
+# uses the test_data feature to suppress calls to an external 'locate'
 
 use warnings;
 use strict;

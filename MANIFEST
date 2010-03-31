@@ -3,8 +3,7 @@ Changes
 MANIFEST
 README
 lib/App/Relate.pm
-t/01-App-Relate.t
+t/00-App-Relate-simple_checks_of_relate_proceedure.t
 bin/relate
-
 Makefile.PL
 META.yml
